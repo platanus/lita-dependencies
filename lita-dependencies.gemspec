@@ -1,12 +1,12 @@
 Gem::Specification.new do |spec|
   spec.name          = "lita-dependencies"
   spec.version       = "0.1.0"
-  spec.authors       = ["Felipe Balart"]
-  spec.email         = ["felbalart@gmail.com"]
-  spec.description   = "TODO: Add a description"
-  spec.summary       = "TODO: Add a summary"
-  spec.homepage      = "TODO: Add a homepage"
-  spec.license       = "TODO: Add a license"
+  spec.authors       = ["Felipe Balart, Mario Lopez, Amos Rivera"]
+  spec.email         = ["contacto@platan.us"]
+  spec.description   = "Lita Handler to monitor company dependencies"
+  spec.summary       = "Lita Handler to monitor company dependencies"
+  spec.homepage      = "https://github.com/platanus/lita-dependencies"
+  spec.license       = "MIT"
   spec.metadata      = { "lita_plugin_type" => "handler" }
 
   spec.files         = `git ls-files`.split($/)
