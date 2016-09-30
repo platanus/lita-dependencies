@@ -10,9 +10,10 @@ module Lita
       http.post "/github-web-hooks", :receive_hook
 
       on :push, :process_push
+      
 
       def process_push
-      	binding.pry
+        puts "Commit detected"
       end
 
       Lita.register_handler(self)
