@@ -12,7 +12,7 @@ module Lita
       on :push, :process_push
 
       def process_push
-      	
+      	binding.pry
       end
 
       Lita.register_handler(self)
