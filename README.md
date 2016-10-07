@@ -1,6 +1,6 @@
 # lita-dependencies
 
-TODO: Add a description of the plugin.
+TODO: Add here a description of the plugin.
 
 ## Installation
 
