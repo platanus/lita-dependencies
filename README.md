@@ -1,6 +1,6 @@
 # lita-dependencies
 
-This plugin allow a Slack team to receieve messages
+This plugin allow a Slack team to receieve messages about new gems in the organization
 
 ## Installation
 
