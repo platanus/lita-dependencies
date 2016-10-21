@@ -17,3 +17,7 @@ TODO: Describe any configuration attributes the plugin exposes.
 ## Usage
 
 TODO: Describe the plugin's features and how to use them.
+
+## Development 
+
+We use `localtunnel` to create a ssh tunnel between a URL and our local machine. This way github can post requests to a know URL and we can receive hooks events from them.
