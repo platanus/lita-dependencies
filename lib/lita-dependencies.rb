@@ -1,4 +1,5 @@
 require "lita"
+require "lita/models/gem_entry"
 require "lita/services/github_service"
 
 Lita.load_locales Dir[File.expand_path(
