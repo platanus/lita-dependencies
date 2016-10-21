@@ -15,6 +15,11 @@ module Lita
         # payload = JSON.parse(payload)
         repository_name = payload["repository"]["name"]
         Lita.logger.debug("Excelent! Someone has commited to '#{repository_name}'")
+        payload["commits"].each do |commit|
+          commit["modified"].each do |modif|
+            Lita.logger.debug("- #{modif}")
+          end
+        end
       end
      
       Lita.register_handler(self)
