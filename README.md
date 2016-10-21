@@ -1,6 +1,6 @@
 # lita-dependencies
 
-TODO: Add a description of the plugin.
+This plugin allow a Slack team to receieve messages
 
 ## Installation
 
