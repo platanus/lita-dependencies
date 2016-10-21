@@ -9,18 +9,13 @@ module Lita
 
       http.post "/github-web-hooks", :receive_hook
 
-      on :push, :store
+      on :push, :receive
 
-      def store(payload)
-        repository_name = payload["repository"]["name"]
-        Lita.logger.debug("Excelent! Someone has commited to '#{repository_name}'")
-        payload["commits"].each do |commit|
-          commit["modified"].each do |modif|
-            Lita.logger.debug("- #{modif} modified")
-          end
-        end
+      def receive(payload)
+        gem_entries = GithubService.gementries(payload, Lita.logger)
+        # message = ProcessEntries.for gem_entries
+        # robot.send_message()
       end
-     
       Lita.register_handler(self)
     end
   end
