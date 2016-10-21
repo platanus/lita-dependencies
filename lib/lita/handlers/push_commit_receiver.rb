@@ -10,20 +10,13 @@ module Lita
       http.post "/github-web-hooks", :receive_hook
 
       on :push, :store
-      on :ping, :just_ping
 
-      def logger
-        Lita.logger
+      def store(payload)
+        # payload = JSON.parse(payload)
+        repository_name = payload["repository"]["name"]
+        Lita.logger.debug("Excelent! Someone has commited to '#{repository_name}'")
       end
-
-      def store(_payload)
-        logger.debug("Payload received")
-      end
-
-      def just_ping(_payload)
-        logger.debug("Ping received from Github with success!")
-      end
-
+     
       Lita.register_handler(self)
     end
   end
