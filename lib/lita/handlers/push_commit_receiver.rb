@@ -12,12 +12,11 @@ module Lita
       on :push, :store
 
       def store(payload)
-        # payload = JSON.parse(payload)
         repository_name = payload["repository"]["name"]
         Lita.logger.debug("Excelent! Someone has commited to '#{repository_name}'")
         payload["commits"].each do |commit|
           commit["modified"].each do |modif|
-            Lita.logger.debug("- #{modif}")
+            Lita.logger.debug("- #{modif} modified")
           end
         end
       end
