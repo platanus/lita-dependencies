@@ -46,6 +46,7 @@ module Lita
 
       def process(payload)
         entries = GithubService.gementries(payload)
+        puts "recieved #{entries.nil? ? "nil" : entries.count} entries"
         message = ""
         entries.each do |entry|
           message += ProcessEntry.for(entry: entry, redis: redis).to_s

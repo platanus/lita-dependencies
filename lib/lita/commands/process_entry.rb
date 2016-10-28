@@ -1,11 +1,16 @@
 class ProcessEntry < PowerTypes::Command.new(:entry, :redis)
   def perform
-    @previous_entries = get_previous_entries  unless ignored_gem?
+    puts "processing #{@entry.dump}"
+    puts "gem ignored?: #{ignored_gem? ? 'YES' : 'NO'}"
+    @previous_entries = get_previous_entries
+    puts "fetched #{@previous_entries.nil? ? "nil" : @previous_entries.count} previous entries"
     store_entry unless repeated_entry?
+    puts "I build message if gem is not ignored (so #{ignored_gem? ? 'I wont' : 'I will'})"
     BuildMessage.for(entry: @entry, previous_entries: @previous_entries) unless ignored_gem? || repeated_entry?
   end
 
   def store_entry
+    puts "stored entry"
     @redis.sadd(@entry.gem_name, @entry.dump)
   end
 
