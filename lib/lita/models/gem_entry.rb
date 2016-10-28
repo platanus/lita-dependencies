@@ -20,7 +20,7 @@ class GemEntry
   end
 
   def ==(other_entry)
-    gem_name == other_entry.gem_name && user == other_entry.user && project == other_entry.project
+    gem_name == other_entry.gem_name && project == other_entry.project
   end
 
   def dump
