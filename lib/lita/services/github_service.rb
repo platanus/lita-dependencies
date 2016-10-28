@@ -48,9 +48,9 @@ class GithubService
   # Parse a gem line
   def self.parse_line(line)
     line.gsub!("gem ", "")
-    line.delete!(" ", "")
-    line.delete!("\"", "")
-    line.delete!("'", "")
+    line.gsub!(" ", "")
+    line.gsub!("\"", "")
+    line.gsub!("'", "")
     line = line.split(",")[0..1]
     if line[1] && %r{[0-9.]}.match(line[1])
       line[1] = line[1]
