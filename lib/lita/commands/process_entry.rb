@@ -1,6 +1,3 @@
-require_relative 'build_message'
-require "redis"
-
 class ProcessEntry < PowerTypes::Command.new(:entry, :redis)
   def perform
     @previous_entries = get_previous_entries  unless ignored_gem?

@@ -24,4 +24,5 @@ Gem::Specification.new do |spec|
 
   spec.add_runtime_dependency "lita-github-web-hooks-core"
   spec.add_runtime_dependency "octokit", "~> 4.0"
+  spec.add_runtime_dependency "power-types"
 end
