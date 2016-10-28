@@ -9,13 +9,27 @@ module Lita
 
       http.post "/github-web-hooks", :receive_hook
 
-      on :push, :receive
+      on :push, :process
 
-      def receive(payload)
-        gem_entries = GithubService.gementries(payload, Lita.logger)
-        # message = ProcessEntries.for gem_entries
-        # robot.send_message()
+      def process(payload)
+        entries = GithubService.gementries(payload)
+        message = ""
+        entries.each do |entry|
+          message += ProcessEntry.for(entry: entry, redis: redis).to_s
+        end
+
+        unless message == ""
+          message = "Tengo unas noticias GEMiales para ustedes! :deal-with-it:\n\n" + message
+          robot.send_message(target, message)
+        end
       end
+
+
+      def target
+        @target ||= Source.new(room: ENV.fetch("SLACK_ROOM_NAME"))
+      end
+    end
+
       Lita.register_handler(self)
     end
   end
