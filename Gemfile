@@ -5,5 +5,6 @@ gem "amos"
 gem "poloniex"
 gem "spritez"
 gem 'gemaker'
+gem 'chapa-la-pachala'
 
 gemspec
