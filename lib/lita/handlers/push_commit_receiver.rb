@@ -8,7 +8,7 @@ module Lita
       end
 
       route("hello-dep") do |response|
-        response.reply("hello my friend! I'm alive")
+        response.reply("hello my friend! I'm alive here!!!!!!!")
       end
 
       route(/please\signore\sgem\s+(.+)/) do |response|
