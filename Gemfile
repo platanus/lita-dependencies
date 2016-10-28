@@ -4,5 +4,6 @@ gem "asuncion"
 gem "amos"
 gem "poloniex"
 gem "spritez"
+gem 'gemaker'
 
 gemspec
