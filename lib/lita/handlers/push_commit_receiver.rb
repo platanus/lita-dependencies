@@ -78,12 +78,6 @@ module Lita
       def ignored_gems_list
         redis.smembers("ignored_gems")
       end
-
-      def temp_entries
-        [
-            GemEntry.new(gem_name: "devise",user: "felbalart",version: "1.01",project: "ninja-markets",date:"2016-10-02"),
-            GemEntry.new(gem_name: "devise",user: "mariolopez",version: "1.01",project: "surbtc",date:"2016-05-12")
-        ]
     end
 
       Lita.register_handler(self)
