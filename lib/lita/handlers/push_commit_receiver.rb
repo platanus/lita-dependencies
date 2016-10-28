@@ -8,7 +8,8 @@ module Lita
       end
 
       route("hello-dep") do |response|
-        response.reply("hello my friend! I'm alive")
+        puts "hola puts"
+        response.reply("hello my friend! I'm alive here")
       end
 
       route(/please\signore\sgem\s+(.+)/) do |response|
@@ -45,15 +46,21 @@ module Lita
       on :push, :process
 
       def process(payload)
+        puts "proceessss"
         entries = GithubService.gementries(payload)
+        puts "entries count #{entries.try(:count)}"
         message = ""
         entries.each do |entry|
           message += ProcessEntry.for(entry: entry, redis: redis).to_s
         end
-
+        puts "message #{message}"
         unless message == ""
           message = "Tengo unas noticias GEMiales para ustedes! :deal-with-it:\n\n" + message
-          robot.send_message(target, message)
+          el_target = target
+          puts el_target
+          puts "var #{ENV.fetch("DEPENDENCIES_ROOM")}"
+          puts "robot class: #{robot.class}"
+          robot.send_message(el_target, message)
         end
       end
 
@@ -79,12 +86,9 @@ module Lita
         redis.smembers("ignored_gems")
       end
 
-      def temp_entries
-        [
-            GemEntry.new(gem_name: "devise",user: "felbalart",version: "1.01",project: "ninja-markets",date:"2016-10-02"),
-            GemEntry.new(gem_name: "devise",user: "mariolopez",version: "1.01",project: "surbtc",date:"2016-05-12")
-        ]
-    end
+      def reset_redis
+       redis.flush_db
+      end
 
       Lita.register_handler(self)
     end
