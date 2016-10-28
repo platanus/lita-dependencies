@@ -4,7 +4,7 @@ require 'net/http'
 
 class GithubService
   # Builds an array of GemEntry
-  def self.gementries(response, _logger)
+  def self.gementries(response)
     entries = []
     response["commits"].each do |commit|
       commit["modified"].each do |modif|

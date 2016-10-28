@@ -24,12 +24,9 @@ module Lita
         end
       end
 
-
       def target
         @target ||= Source.new(room: ENV.fetch("SLACK_ROOM_NAME"))
       end
-    end
-
       Lita.register_handler(self)
     end
   end
