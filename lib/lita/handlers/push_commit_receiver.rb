@@ -8,7 +8,7 @@ module Lita
       end
 
       route("hello-dep") do |response|
-        response.reply("hello my friend! I'm alive here!!!!!!!")
+        response.reply("hello hello, here we are, everything alright")
       end
 
       route(/please\signore\sgem\s+(.+)/) do |response|
@@ -79,7 +79,6 @@ module Lita
       def ignored_gems_list
         redis.smembers("ignored_gems")
       end
-    end
 
       Lita.register_handler(self)
     end
