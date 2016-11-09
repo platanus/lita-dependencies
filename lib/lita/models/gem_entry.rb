@@ -9,13 +9,10 @@ class GemEntry
     @user = args[:user]
     @project = args[:project]
 
-    case args[:date].class
-      when Date
-        @date = args[:date]
-      when String
-        @date = Date.parse(args[:date])
-      else
-        @date = Date.today
+    if args[:date].nil?
+      @date = Date.today
+    else
+      @date = Date.parse(args[:date].to_s)
     end
   end
 
