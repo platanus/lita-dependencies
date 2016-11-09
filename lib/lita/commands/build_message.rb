@@ -3,9 +3,9 @@ class BuildMessage < PowerTypes::Command.new(:entry, :previous_entries)
     use_count = @previous_entries.count + 1
 
     this_entry_msg = %Q(
-    #{@entry.user} incluyó la gema '#{@entry.gem_name}' en el proyecto #{@entry.project}.
-    Es la #{use_count}º vez que se usa en Platanus.
-  )
+#{@entry.user} incluyó la gema '#{@entry.gem_name}' en el proyecto #{@entry.project}.
+Es la #{use_count}º vez que se usa en Platanus.
+)
     use_history_msg =
         case use_count
           when 0..1
@@ -18,7 +18,7 @@ class BuildMessage < PowerTypes::Command.new(:entry, :previous_entries)
             "Las últimas 2 veces fueron #{entry_phrase(@previous_entries[0])}, y #{entry_phrase(@previous_entries[1])}"
         end
 
-    this_entry_msg + use_history_msg
+    this_entry_msg + use_history_msg + "\n"
   end
 
   def entry_phrase(_entry)
