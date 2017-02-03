@@ -13,7 +13,7 @@ module Lita
 
       route(/please\signore\sgem\s+(.+)/) do |response|
         gem_name = response.matches[0][0]
-        success = add_to_ignored(gem_name)
+        success = IgnoredGemsService.new.add_to_ignored(gem_name)
         if success
           response.reply("Ok dude. Added gem '#{gem_name}' to my ignore list")
         else
@@ -23,7 +23,7 @@ module Lita
 
       route(/please\sconsider\sgem\s+(.+)/) do |response|
         gem_name = response.matches[0][0]
-        success = remove_from_ignored(gem_name)
+        success = IgnoredGemsService.new.remove_from_ignored(gem_name)
         if success
           response.reply("Ok dude, let's consider back gem '#{gem_name}'.\nRemoved from ignore list")
         else
@@ -32,7 +32,7 @@ module Lita
       end
 
       route(/please\sshow\signored\sgems/) do |response|
-        gems = ignored_gems_list
+        gems = IgnoredGemsService.new.get_list
         if gems.empty?
           response.reply("No ignored gems by now")
         else
@@ -62,22 +62,6 @@ module Lita
 
       def target
         @target ||= Source.new(room: ENV.fetch("DEPENDENCIES_ROOM"))
-      end
-
-      def add_to_ignored(gem_name)
-        return false if redis.sismember("ignored_gems", gem_name)
-        redis.sadd("ignored_gems", gem_name)
-        true
-      end
-
-      def remove_from_ignored(gem_name)
-        return false unless redis.sismember("ignored_gems", gem_name)
-        redis.srem("ignored_gems", gem_name)
-        true
-      end
-
-      def ignored_gems_list
-        redis.smembers("ignored_gems")
       end
 
       Lita.register_handler(self)
