@@ -5,9 +5,13 @@ class ProcessEntry < PowerTypes::Command.new(:entry, :redis)
     @previous_entries = get_previous_entries
     puts "fetched #{@previous_entries.nil? ? "nil" : @previous_entries.count} previous entries"
     store_entry unless repeated_entry?
-    puts "I build message if gem is not ignored (so #{ignored_gem? ? 'I wont' : 'I will'})"
-    BuildMessage.for(entry: @entry, previous_entries: @previous_entries) unless ignored_gem? || repeated_entry?
+    unless ignored_gem? || repeated_entry? || !from_team?
+      puts "Will build message..."
+      BuildMessage.for(entry: @entry, previous_entries: @previous_entries)
+    end
   end
+
+  private
 
   def store_entry
     puts "stored entry"
@@ -26,5 +30,13 @@ class ProcessEntry < PowerTypes::Command.new(:entry, :redis)
 
   def repeated_entry?
     @previous_entries.include?(@entry)
+  end
+
+    def from_team?
+    @team_members.include?(@entry.user)
+  end
+
+  def team_members
+    @team_members ||= @redis.smembers("team_members")
   end
 end
