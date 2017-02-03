@@ -13,7 +13,7 @@ module Lita
 
       route(/please\signore\sgem\s+(.+)/) do |response|
         gem_name = response.matches[0][0]
-        success = IgnoredGemsService.new.add_to_ignored(gem_name)
+        success = IgnoredGemsService.new(redis: redis).add_to_ignored(gem_name)
         if success
           response.reply("Ok dude. Added gem '#{gem_name}' to my ignore list")
         else
@@ -23,7 +23,7 @@ module Lita
 
       route(/please\sconsider\sgem\s+(.+)/) do |response|
         gem_name = response.matches[0][0]
-        success = IgnoredGemsService.new.remove_from_ignored(gem_name)
+        success = IgnoredGemsService.new(redis: redis).remove_from_ignored(gem_name)
         if success
           response.reply("Ok dude, let's consider back gem '#{gem_name}'.\nRemoved from ignore list")
         else
@@ -32,11 +32,40 @@ module Lita
       end
 
       route(/please\sshow\signored\sgems/) do |response|
-        gems = IgnoredGemsService.new.get_list
+        gems = IgnoredGemsService.new(redis: redis).get_list
         if gems.empty?
           response.reply("No ignored gems by now")
         else
           response.reply("Let's see... ignored gems are:\n#{gems.join(', ')}")
+        end
+      end
+
+      route(/please\sadd\steam\smember\s+(.+)/) do |response|
+        name = response.matches[0][0]
+        success = redis.sadd("team_members", name)
+        if success
+          response.reply("Ok dude. Added team member '#{gem_name}'")
+        else
+          response.reply("Epaah!  Team member '#{name}' was already in the list")
+        end
+      end
+
+      route(/please\sremove\steam\smember\s+(.+)/) do |response|
+        name = response.matches[0][0]
+        success = redis.srem("team_members", name)
+        if success
+          response.reply("Ok dude, #{team_member} is not in the team anymore")
+        else
+          response.reply("Mmm sure? '#{gem_name}' is not found on my team list")
+        end
+      end
+
+      route(/please\sshow\steam\smembers/) do |response|
+        team_members = redis.smembers("team_members")
+        if team_members.empty?
+          response.reply("No team members by now")
+        else
+          response.reply("Let's see... team members are:\n#{team_members.join(', ')}")
         end
       end
 
