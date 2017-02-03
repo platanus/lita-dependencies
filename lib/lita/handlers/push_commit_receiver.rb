@@ -76,14 +76,14 @@ module Lita
       def process(payload)
         entries = GithubService.gementries(payload)
         puts "recieved #{entries.nil? ? "nil" : entries.count} entries"
-        message = ""
+        messages = []
         entries.each do |entry|
-          message += ProcessEntry.for(entry: entry, redis: redis).to_s
+          messages << ProcessEntry.for(entry: entry, redis: redis).to_s
         end
 
-        unless message == ""
-          message = "Tengo unas noticias GEMiales para ustedes! :deal-with-it:\n\n" + message
-          robot.send_message(target, message)
+        unless messages.empty?
+          messages.unshift "Tengo unas noticias GEMiales para ustedes! :deal-with-it:\n\n"
+          messages.each { |message| robot.send_message(target, message) }
         end
       end
 
