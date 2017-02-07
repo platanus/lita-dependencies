@@ -44,7 +44,7 @@ module Lita
         name = response.matches[0][0]
         success = redis.sadd("team_members", name)
         if success
-          response.reply("Ok dude. Added team member '#{gem_name}'")
+          response.reply("Ok dude. Added team member '#{name}'")
         else
           response.reply("Epaah!  Team member '#{name}' was already in the list")
         end
@@ -54,9 +54,9 @@ module Lita
         name = response.matches[0][0]
         success = redis.srem("team_members", name)
         if success
-          response.reply("Ok dude, #{team_member} is not in the team anymore")
+          response.reply("Ok dude, #{name} is not in the team anymore")
         else
-          response.reply("Mmm sure? '#{gem_name}' is not found on my team list")
+          response.reply("Mmm sure? '#{name}' is not found on my team list")
         end
       end
 
@@ -78,12 +78,17 @@ module Lita
         puts "recieved #{entries.nil? ? "nil" : entries.count} entries"
         messages = []
         entries.each do |entry|
-          messages << ProcessEntry.for(entry: entry, redis: redis).to_s
+          messages << ProcessEntry.for(entry: entry, redis: redis)
         end
 
+        messages.reject!(&:nil?)
+
         unless messages.empty?
-          messages.unshift "Tengo unas noticias GEMiales para ustedes! :deal-with-it:\n\n"
-          messages.each { |message| robot.send_message(target, message) }
+          messages.unshift "Hola, tenemos noticias GEMiales: :parrot_mustache:\n"
+          messages.each_with_index do |message, index|
+            prepend = index.between?(2, messages.length - 1) ? "\n'\n" : ""
+            robot.send_message(target, prepend + message)
+          end
         end
       end
 

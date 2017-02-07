@@ -4,7 +4,7 @@ class BuildMessage < PowerTypes::Command.new(:entry, :previous_entries)
     data = GetGemInfo.for(name: @entry.gem_name) || { description: "No sé lo que hace esta gema..." }
 
     this_entry_msg = %Q(
-*#{@entry.user}* incluyó en *#{@entry.project}* la gema:\n   `#{@entry.gem_name}` #{data[:uri]}
+*#{@entry.user}* incluyó en *#{@entry.project}* la gema:\n   • `#{@entry.gem_name}` #{data[:uri]}
 >_#{data[:description]}_
 • Es la *#{use_count}º vez* que se usa en Platanus.
 )
