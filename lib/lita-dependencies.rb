@@ -1,6 +1,7 @@
 require "lita"
 require "redis"
 require "power-types"
+require "gems"
 require "lita/models/gem_entry"
 require "lita/services/github_service"
 require "lita/commands/build_message"

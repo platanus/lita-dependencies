@@ -1,3 +1,4 @@
+require "gems"
 class GetGemInfo < PowerTypes::Command.new(:name)
   def perform
     data = Gems.info @name
