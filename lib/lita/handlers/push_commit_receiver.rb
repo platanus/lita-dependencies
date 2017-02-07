@@ -13,7 +13,7 @@ module Lita
 
       route(/please\signore\sgem\s+(.+)/) do |response|
         gem_name = response.matches[0][0]
-        success = add_to_ignored(gem_name)
+        success = IgnoredGemsService.new(redis: redis).add_to_ignored(gem_name)
         if success
           response.reply("Ok dude. Added gem '#{gem_name}' to my ignore list")
         else
@@ -23,7 +23,7 @@ module Lita
 
       route(/please\sconsider\sgem\s+(.+)/) do |response|
         gem_name = response.matches[0][0]
-        success = remove_from_ignored(gem_name)
+        success = IgnoredGemsService.new(redis: redis).remove_from_ignored(gem_name)
         if success
           response.reply("Ok dude, let's consider back gem '#{gem_name}'.\nRemoved from ignore list")
         else
@@ -32,11 +32,40 @@ module Lita
       end
 
       route(/please\sshow\signored\sgems/) do |response|
-        gems = ignored_gems_list
+        gems = IgnoredGemsService.new(redis: redis).get_list
         if gems.empty?
           response.reply("No ignored gems by now")
         else
           response.reply("Let's see... ignored gems are:\n#{gems.join(', ')}")
+        end
+      end
+
+      route(/please\sadd\steam\smember\s+(.+)/) do |response|
+        name = response.matches[0][0]
+        success = redis.sadd("team_members", name)
+        if success
+          response.reply("Ok dude. Added team member '#{name}'")
+        else
+          response.reply("Epaah!  Team member '#{name}' was already in the list")
+        end
+      end
+
+      route(/please\sremove\steam\smember\s+(.+)/) do |response|
+        name = response.matches[0][0]
+        success = redis.srem("team_members", name)
+        if success
+          response.reply("Ok dude, #{name} is not in the team anymore")
+        else
+          response.reply("Mmm sure? '#{name}' is not found on my team list")
+        end
+      end
+
+      route(/please\sshow\steam\smembers/) do |response|
+        team_members = redis.smembers("team_members")
+        if team_members.empty?
+          response.reply("No team members by now")
+        else
+          response.reply("Let's see... team members are:\n#{team_members.join(', ')}")
         end
       end
 
@@ -47,14 +76,19 @@ module Lita
       def process(payload)
         entries = GithubService.gementries(payload)
         puts "recieved #{entries.nil? ? "nil" : entries.count} entries"
-        message = ""
+        messages = []
         entries.each do |entry|
-          message += ProcessEntry.for(entry: entry, redis: redis).to_s
+          messages << ProcessEntry.for(entry: entry, redis: redis)
         end
 
-        unless message == ""
-          message = "Tengo unas noticias GEMiales para ustedes! :deal-with-it:\n\n" + message
-          robot.send_message(target, message)
+        messages.reject!(&:nil?)
+
+        unless messages.empty?
+          messages.unshift "Hola, tenemos noticias GEMiales: :parrot_mustache:\n"
+          messages.each_with_index do |message, index|
+            prepend = index.between?(2, messages.length - 1) ? "\n'\n" : ""
+            robot.send_message(target, prepend + message)
+          end
         end
       end
 
@@ -62,22 +96,6 @@ module Lita
 
       def target
         @target ||= Source.new(room: ENV.fetch("DEPENDENCIES_ROOM"))
-      end
-
-      def add_to_ignored(gem_name)
-        return false if redis.sismember("ignored_gems", gem_name)
-        redis.sadd("ignored_gems", gem_name)
-        true
-      end
-
-      def remove_from_ignored(gem_name)
-        return false unless redis.sismember("ignored_gems", gem_name)
-        redis.srem("ignored_gems", gem_name)
-        true
-      end
-
-      def ignored_gems_list
-        redis.smembers("ignored_gems")
       end
 
       Lita.register_handler(self)
