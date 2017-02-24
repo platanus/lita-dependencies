@@ -7,11 +7,15 @@ module Lita
         "GithubPushReceiver"
       end
 
-      route("hello-dep") do |response|
+      def self.help_msg(route)
+        { "dependencies: #{t("help.#{route}.usage")}" => t("help.#{route}.description") }
+      end
+
+      route("hello-dep", command: true, help: help_msg('hello')) do |response|
         response.reply("hello hello, here we are, everything alright")
       end
 
-      route(/please\signore\sgem\s+(.+)/) do |response|
+      route(/please\signore\sgem\s+(.+)/, command: true, help: help_msg('ignore_gem')) do |response|
         gem_name = response.matches[0][0]
         success = IgnoredGemsService.new(redis: redis).add_to_ignored(gem_name)
         if success
@@ -21,7 +25,7 @@ module Lita
         end
       end
 
-      route(/please\sconsider\sgem\s+(.+)/) do |response|
+      route(/please\sconsider\sgem\s+(.+)/, command: true, help: help_msg('consider_gem')) do |response|
         gem_name = response.matches[0][0]
         success = IgnoredGemsService.new(redis: redis).remove_from_ignored(gem_name)
         if success
@@ -31,7 +35,7 @@ module Lita
         end
       end
 
-      route(/please\sshow\signored\sgems/) do |response|
+      route(/please\sshow\signored\sgems/, command: true, help: help_msg('show_ignored_gems')) do |response|
         gems = IgnoredGemsService.new(redis: redis).get_list
         if gems.empty?
           response.reply("No ignored gems by now")
@@ -40,7 +44,7 @@ module Lita
         end
       end
 
-      route(/please\sadd\steam\smember\s+(.+)/) do |response|
+      route(/please\sadd\steam\smember\s+(.+)/, command: true, help: help_msg('add_team_member')) do |response|
         name = response.matches[0][0]
         success = redis.sadd("team_members", name)
         if success
@@ -50,7 +54,7 @@ module Lita
         end
       end
 
-      route(/please\sremove\steam\smember\s+(.+)/) do |response|
+      route(/please\sremove\steam\smember\s+(.+)/, command: true, help: help_msg('remove_team_member')) do |response|
         name = response.matches[0][0]
         success = redis.srem("team_members", name)
         if success
@@ -60,7 +64,7 @@ module Lita
         end
       end
 
-      route(/please\sshow\steam\smembers/) do |response|
+      route(/please\sshow\steam\smembers/, command: true, help: help_msg('show_team_members')) do |response|
         team_members = redis.smembers("team_members")
         if team_members.empty?
           response.reply("No team members by now")
