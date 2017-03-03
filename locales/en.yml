@@ -1,4 +1,26 @@
 en:
   lita:
     handlers:
-      dependencies:
+      github_push_receiver:
+        help:
+          hello:
+            usage: hello-dep
+            description: Lita Dependencies say hello
+          ignore_gem:
+            usage: please ignore gem [gem-name]
+            description: Ignore a specific gem
+          consider_gem:
+            usage: please consider gem [gem-name]
+            description: Consider a new gem
+          show_ignored_gems:
+            usage: please show ignored gems
+            description: List all ignored gems
+          add_team_member:
+            usage: please add team member [username]
+            description: Add new team member
+          remove_team_member:
+            usage: please remove team member [username]
+            description: Remove team member
+          show_team_members:
+            usage: please show team members
+            description: List all team members
